@@ -1,4 +1,4 @@
-import { HashRouter, Navigate, Route, Routes } from 'react-router-dom'
+import { HashRouter, MemoryRouter, Navigate, Route, Routes } from 'react-router-dom'
 import { Toast } from './components/ui'
 import { AppStateProvider } from './state/AppState'
 import Compare from './screens/Compare'
@@ -31,10 +31,13 @@ function ScrollTop() {
   return null
 }
 
+// The single-file build (npm run build:single) keeps routes in memory, for hosts that own the URL hash.
+const Router = import.meta.env.VITE_MEMORY_ROUTER === '1' ? MemoryRouter : HashRouter
+
 export default function App() {
   return (
     <AppStateProvider>
-      <HashRouter>
+      <Router>
         <LangAttr />
         <ScrollTop />
         <Routes>
@@ -52,7 +55,7 @@ export default function App() {
           <Route path="*" element={<Navigate to="/" replace />} />
         </Routes>
         <Toast />
-      </HashRouter>
+      </Router>
     </AppStateProvider>
   )
 }
